@@ -92,6 +92,10 @@ class GameSummary:
         good_won = self.winner == Team.GOOD
         return [self.dt, len(self.players), self.n_missions, good_won, win_by_assassination]
 
+    def get_player_level_data(self):
+        # TODO: understand the contributions of a particular player over the course of many games
+        pass
+
 
 @dataclass
 class AvalonAnalysis:
