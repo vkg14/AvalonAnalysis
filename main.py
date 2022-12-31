@@ -104,6 +104,7 @@ class AvalonAnalysis:
         return pd.DataFrame(data, columns=columns)
 
     def game_level_stats(self):
+        # TODO: Add stats about the most lopsided variant (by number of players)
         total_games = len(self.game_level_data)
         total_good_wins = self.game_level_data.goodWon.sum()
         good_win_pct = total_good_wins * 100.0 / total_games
