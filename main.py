@@ -24,17 +24,9 @@ class Role(StrEnum):
     MINION = auto()
     OBERON = auto()
 
-
-AFFILIATIONS = {
-    Role.MERLIN: Team.GOOD,
-    Role.PERCIVAL: Team.GOOD,
-    Role.LOYAL_SERVANT: Team.GOOD,
-    Role.OBERON: Team.EVIL,
-    Role.MINION: Team.EVIL,
-    Role.ASSASSIN: Team.EVIL,
-    Role.MORGANA: Team.EVIL,
-    Role.MORDRED: Team.EVIL
-}
+    @classmethod
+    def get_team(cls, role):
+        return Team.GOOD if role in [cls.MERLIN, cls.PERCIVAL, cls.LOYAL_SERVANT] else Team.EVIL
 
 
 class SummaryParser:
@@ -82,7 +74,7 @@ class GameSummary:
     raw_text: str
 
     def __post_init__(self):
-        if sum(1 if AFFILIATIONS[c] == Team.GOOD else -1 for c in self.players.values()) <= 0:
+        if sum(1 if Role.get_team(c) == Team.GOOD else -1 for c in self.players.values()) <= 0:
             raise Exception(f"Game {self.game_id} should have more good than bad players:\n{self.raw_text}")
         if self.winner == Team.GOOD and not self.assassinated:
             raise Exception(f"An assassination was expected in game {self.game_id}:\n{self.raw_text}")
