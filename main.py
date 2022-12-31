@@ -104,12 +104,19 @@ class AvalonAnalysis:
         return pd.DataFrame(data, columns=columns)
 
     def game_level_stats(self):
-        good_win_pct = (~self.game_level_data.sum()) * 100.0 / len(self.game_level_data)
+        total_games = len(self.game_level_data)
+        total_good_wins = self.game_level_data.goodWon.sum()
+        good_win_pct = total_good_wins * 100.0 / total_games
         print(f"Good wins {good_win_pct}% of the time.")
+        win_by_ass = self.game_level_data.wonByAssassination.sum() * 100.0 / (total_games - total_good_wins)
+        print(f"When evil wins, {win_by_ass}% is via Merlin assassination.")
 
 
 if __name__ == '__main__':
     with open('games.txt') as f:
         games_raw = f.read().split('\n\n')
         analysis = AvalonAnalysis([SummaryParser.parse_summary(idx, game) for idx, game in enumerate(games_raw)])
-        gld = analysis.game_level_data
+        for game in analysis.games:
+            print(f"Game: {game.game_id}, {game.players}, missions: {game.n_missions}, winner: {game.winner}")
+        print(analysis.game_level_data)
+        analysis.game_level_stats()
